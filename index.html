@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entraînement : Opérations Posées Décimales (6ème)</title>
+    <style>
+        :root {
+            --bg-color: #0b0b0c;
+            --card-bg: #16161a;
+            --accent-color: #39ff14; /* Vert McKinsey */
+            --text-main: #ffffff;
+            --text-muted: #8e8e93;
+            --border-color: #2c2c2e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 650px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background-color: #222227;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            color: var(--text-main);
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        .consigne {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        
+        .operation-container {
+            display: flex;
+            justify-content: center;
+            background-color: #1e1e24;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .operation-standard {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.2em;
+            font-weight: bold;
+            line-height: 1.3;
+            text-align: left;
+            display: inline-block;
+            color: var(--text-main);
+            letter-spacing: 2px;
+            white-space: pre;
+        }
+
+        .barre-calcul {
+            border: none;
+            border-top: 3px solid var(--text-main);
+            margin: 8px 0 0 0;
+            padding: 0;
+        }
+
+        .potence-division {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.2em;
+            font-weight: bold;
+            border-collapse: collapse;
+            color: var(--text-main);
+        }
+
+        .potence-division td {
+            padding: 10px 20px;
+            text-align: center;
+            border: none;
+        }
+
+        .td-dividend {
+            text-align: right !important;
+            padding-right: 15px !important;
+        }
+
+        .td-divisor {
+            border-left: 4px solid var(--text-main) !important;
+            text-align: left !important;
+            padding-left: 15px !important;
+        }
+
+        .td-quotient {
+            border-left: 4px solid var(--text-main) !important;
+            border-top: 4px solid var(--text-main) !important;
+            text-align: left !important;
+            padding-left: 15px !important;
+            color: var(--text-muted);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button.action-btn {
+            flex: 1;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.1s;
+        }
+
+        button.action-btn:active {
+            transform: scale(0.99);
+        }
+
+        .btn-start {
+            background-color: var(--accent-color);
+            color: #000000;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-start:active {
+            transform: scale(0.99);
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: #000000;
+        }
+
+        .btn-skip {
+            background-color: #2c2c2e;
+            color: #e5e5ea;
+            border: 1px solid #48484a;
+        }
+        
+        .progress-bar {
+            background-color: #2c2c2e;
+            border-radius: 4px;
+            height: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .indicator {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .result-box {
+            background: #1e1e24;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-box h2 {
+            margin-top: 0;
+            font-size: 18px;
+            text-transform: uppercase;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin: 15px 0;
+        }
+        
+        table.bilan {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        table.bilan th, table.bilan td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.bilan th {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .row-correct {
+            color: var(--accent-color);
+        }
+
+        .row-incorrect {
+            color: #ff453a;
+        }
+
+        .row-skipped {
+            color: #e5e5ea;
+        }
+
+        .badge {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Calcul Posé Décimal (6ème)</h1>
+        <div class="subtitle">Évaluation de haut niveau</div>
+    </div>
+
+    <!-- PANEL 1 : LOGIN -->
+    <div id="panel-login" class="step-panel active">
+        <div class="form-group">
+            <label for="student-name">Entrez votre nom et votre prénom :</label>
+            <input type="text" id="student-name" placeholder="Ex: Lucas Simon" autocomplete="off">
+        </div>
+        <button class="btn-start" onclick="startTest()">Commencer l'évaluation</button>
+    </div>
+
+    <!-- PANEL 2 : PLAY -->
+    <div id="panel-quiz" class="step-panel">
+        <div class="indicator">Question <span id="current-q">1</span> / 5</div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        
+        <div class="consigne" id="q-consigne">Effectue l'opération posée :</div>
+        
+        <div class="operation-container" id="q-operation-container"></div>
+        
+        <div style="background-color: #1e1e24; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <label for="user-answer">Réponse (utilise la virgule ',' ou le point '.') :</label>
+            <input type="text" id="user-answer" placeholder="Inscris le résultat précis" autocomplete="off">
+            
+            <div class="btn-group">
+                <button class="action-btn btn-skip" onclick="skipQuestion()">Passer ⏭️</button>
+                <button class="action-btn btn-submit" onclick="submitAnswer()">Valider la réponse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 3 : RECAP -->
+    <div id="panel-results" class="step-panel">
+        <div class="result-box">
+            <h2>Rapport d'évaluation</h2>
+            <p>Résultats pour : <span id="res-name" style="font-weight: bold; color: #fff;">...</span></p>
+            <div class="score-display" id="res-grade">0 / 5</div>
+        </div>
+
+        <h3 style="margin-top:30px; color: var(--text-main); font-size:15px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">Correction détaillée</h3>
+        <table class="bilan">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Opération</th>
+                    <th>Ta réponse</th>
+                    <th>Correction</th>
+                </tr>
+            </thead>
+            <tbody id="bilan-table-body">
+            </tbody>
+        </table>
+
+        <button class="btn-start" style="margin-top: 30px;" onclick="location.reload()">Nouveau Test Aléatoire</button>
+    </div>
+</div>
+
+<script>
+    let quizQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let studentName = "";
+
+    // Algorithme d'alignement parfait par la virgule pour l'affichage vertical
+    function generateDecimalStandardHTML(s1, s2, operator) {
+        const p1 = s1.split(',');
+        const p2 = s2.split(',');
+
+        // Largeur maximale requise pour la partie entière (à gauche de la virgule)
+        // La ligne 2 a besoin d'au moins 2 caractères de décalage pour l'opérateur et l'espace
+        const leftLen1 = p1[0].length;
+        const leftLen2 = p2[0].length + 2; 
+        const maxLeft = Math.max(leftLen1, leftLen2);
+
+        // Largeur maximale pour la partie décimale (à droite de la virgule)
+        const maxRight = Math.max(p1[1].length, p2[1].length);
+
+        // Construction de la Ligne 1
+        const padLeft1 = maxLeft - leftLen1;
+        const padRight1 = maxRight - p1[1].length;
+        const line1 = '\xa0'.repeat(padLeft1) + p1[0] + ',' + p1[1] + '\xa0'.repeat(padRight1);
+
+        // Construction de la Ligne 2 (avec l'opérateur aligné tout à gauche)
+        const padLeft2 = maxLeft - leftLen2;
+        const padRight2 = maxRight - p2[1].length;
+        const line2 = operator + '\xa0' + '\xa0'.repeat(padLeft2) + p2[0] + ',' + p2[1] + '\xa0'.repeat(padRight2);
+        
+        return `<div class="operation-standard">${line1}<br>${line2}<hr class="barre-calcul"></div>`;
+    }
+
+    function generateDivisionHTML(dividendStr, divisorStr) {
+        return `
+            <table class="potence-division">
+                <tr>
+                    <td class="td-dividend">${dividendStr}</td>
+                    <td class="td-divisor">${divisorStr}</td>
+                </tr>
+                <tr>
+                    <td style="color: transparent;">...</td>
+                    <td class="td-quotient">?,??</td>
+                </tr>
+            </table>
+        `;
+    }
+
+    // Génère un nombre décimal à 4 chiffres dont au moins 2 chiffres après la virgule
+    function generate4DigitDecimal() {
+        const type = Math.random() < 0.5 ? '1_3' : '2_2';
+        if (type === '1_3') {
+            const ent = Math.floor(Math.random() * 9) + 1; 
+            const dec = Math.floor(Math.random() * 900) + 100; 
+            const val = parseFloat(`${ent}.${dec}`);
+            return { val: val, str: `${ent},${dec}` };
+        } else {
+            const ent = Math.floor(Math.random() * 90) + 10; 
+            const dec = Math.floor(Math.random() * 90) + 10; 
+            const val = parseFloat(`${ent}.${dec}`);
+            return { val: val, str: `${ent},${dec}` };
+        }
+    }
+
+    // Génère un nombre décimal à 3 chiffres
+    function generate3DigitDecimal() {
+        const type = Math.random() < 0.5 ? '1_2' : '2_1';
+        if (type === '1_2') {
+            const ent = Math.floor(Math.random() * 9) + 1;
+            const dec = Math.floor(Math.random() * 90) + 10;
+            const val = parseFloat(`${ent}.${dec}`);
+            return { val: val, str: `${ent},${dec}` };
+        } else {
+            const ent = Math.floor(Math.random() * 90) + 10;
+            const dec = Math.floor(Math.random() * 9) + 1;
+            const val = parseFloat(`${ent}.${dec}`);
+            return { val: val, str: `${ent},${dec}` };
+        }
+    }
+
+    function buildQuiz() {
+        quizQuestions = [];
+        
+        const generators = [
+            // 1. ADDITION DÉCIMALE
+            () => {
+                const o1 = generate4DigitDecimal();
+                const o2 = generate4DigitDecimal();
+                const exactVal = parseFloat((o1.val + o2.val).toFixed(4));
+                const exactStr = exactVal.toString().replace('.', ',');
+                
+                return {
+                    type: "Addition",
+                    htmlContent: generateDecimalStandardHTML(o1.str, o2.str, "+"),
+                    flatExpr: `${o1.str} + ${o2.str}`,
+                    check: (user) => parseFloat(user.replace(',', '.')) === exactVal,
+                    correctDisplay: exactStr,
+                    status: "pending"
+                };
+            },
+            // 2. SOUSTRACTION DÉCIMALE
+            () => {
+                let o1 = generate4DigitDecimal();
+                let o2 = generate4DigitDecimal();
+                if (o1.val < o2.val) {
+                    const temp = o1;
+                    o1 = o2;
+                    o2 = temp;
+                }
+                const exactVal = parseFloat((o1.val - o2.val).toFixed(4));
+                const exactStr = exactVal.toString().replace('.', ',');
+                
+                return {
+                    type: "Soustraction",
+                    htmlContent: generateDecimalStandardHTML(o1.str, o2.str, "-"),
+                    flatExpr: `${o1.str} - ${o2.str}`,
+                    check: (user) => parseFloat(user.replace(',', '.')) === exactVal,
+                    correctDisplay: exactStr,
+                    status: "pending"
+                };
+            },
+            // 3. MULTIPLICATION DÉCIMALE (4 chiffres par 3 chiffres)
+            () => {
+                const o1 = generate4DigitDecimal(); 
+                const o2 = generate3DigitDecimal(); 
+                const exactVal = parseFloat((o1.val * o2.val).toFixed(7));
+                const exactStr = exactVal.toString().replace('.', ',');
+
+                return {
+                    type: "Multiplication",
+                    htmlContent: generateDecimalStandardHTML(o1.str, o2.str, "×"),
+                    flatExpr: `${o1.str} × ${o2.str}`,
+                    check: (user) => parseFloat(user.replace(',', '.')) === exactVal,
+                    correctDisplay: exactStr,
+                    status: "pending"
+                };
+            },
+            // 4. DIVISION DÉCIMALE (Dividende : exactement 3 chiffres de partie entière)
+            () => {
+                const divisors = [
+                    { val: 4, str: "4" },
+                    { val: 8, str: "8" },
+                    { val: 1.6, str: "1,6" },
+                    { val: 2.5, str: "2,5" },
+                    { val: 0.8, str: "0,8" },
+                    { val: 1.25, str: "1,25" },
+                    { val: 0.4, str: "0,4" }
+                ];
+                const selectedDivisor = divisors[Math.floor(Math.random() * divisors.length)];
+                
+                // Pour forcer exactement 3 chiffres à la partie entière (de 100 à 999) :
+                const targetMinQuotient = 100 / selectedDivisor.val;
+                const targetMaxQuotient = 999 / selectedDivisor.val;
+                
+                const entQuotient = Math.floor(Math.random() * (targetMaxQuotient - targetMinQuotient)) + Math.ceil(targetMinQuotient);
+                const decQuotient = (Math.floor(Math.random() * 18) + 1) * 5; 
+                const quotientVal = parseFloat(`${entQuotient}.${decQuotient < 10 ? '0' + decQuotient : decQuotient}`);
+                
+                const dividendVal = parseFloat((quotientVal * selectedDivisor.val).toFixed(5));
+                const dividendStr = dividendVal.toString().replace('.', ',');
+                
+                let expectedStr = quotientVal.toString().replace('.', ',');
+                if (Number.isInteger(quotientVal)) {
+                    expectedStr = quotientVal.toString() + ",00";
+                } else {
+                    const parts = quotientVal.toString().split('.');
+                    if (parts[1] && parts[1].length === 1) {
+                        expectedStr = quotientVal.toFixed(2).replace('.', ',');
+                    }
+                }
+
+                return {
+                    type: "Division",
+                    htmlContent: generateDivisionHTML(dividendStr, selectedDivisor.str),
+                    flatExpr: `${dividendStr} ÷ ${selectedDivisor.str}`,
+                    check: (user) => {
+                        const cleanUser = user.replace(',', '.').trim();
+                        return parseFloat(cleanUser) === quotientVal;
+                    },
+                    correctDisplay: expectedStr,
+                    status: "pending"
+                };
+            }
+        ];
+
+        let chosen = [...generators];
+        chosen.push(generators[Math.floor(Math.random() * generators.length)]);
+        chosen = chosen.sort(() => 0.5 - Math.random());
+
+        for (let i = 0; i < 5; i++) {
+            quizQuestions.push(chosen[i]());
+        }
+    }
+
+    function startTest() {
+        const nameInput = document.getElementById("student-name").value.trim();
+        if (nameInput === "") {
+            alert("Veuillez entrer votre nom.");
+            return;
+        }
+        studentName = nameInput;
+        buildQuiz();
+        showPanel("panel-quiz");
+        loadQuestion();
+    }
+
+    function showPanel(panelId) {
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(panelId).classList.add('active');
+    }
+
+    function loadQuestion() {
+        if (currentIndex >= 5) {
+            endTest();
+            return;
+        }
+
+        const q = quizQuestions[currentIndex];
+        document.getElementById("current-q").innerText = currentIndex + 1;
+        document.getElementById("q-operation-container").innerHTML = q.htmlContent;
+        
+        if (q.type === "Division") {
+            document.getElementById("q-consigne").innerHTML = "Divise <strong>entièrement</strong> le dividende. Si le quotient s'arrête au dixième, écris-le obligatoirement <strong>jusqu'au centième</strong> (ex : rajoute un 0) :";
+        } else if (q.type === "Multiplication") {
+            document.getElementById("q-consigne").innerHTML = "Effectue la multiplication décimale complexe (<strong>4 chiffres par 3 chiffres</strong>) :";
+        } else {
+            document.getElementById("q-consigne").innerText = "Effectue l'opération décimale posée suivante (les virgules sont parfaitement alignées) :";
+        }
+        
+        document.getElementById("user-answer").value = "";
+        document.getElementById("user-answer").focus();
+        
+        const progress = (currentIndex / 5) * 100;
+        document.getElementById("progress-fill").style.width = progress + "%";
+    }
+
+    function submitAnswer() {
+        const q = quizQuestions[currentIndex];
+        const uAns = document.getElementById("user-answer").value.trim();
+        
+        if (uAns === "") {
+            alert("Veuillez inscrire un résultat.");
+            return;
+        }
+
+        q.savedAns = uAns.replace('.', ',');
+        const isCorrect = q.check(uAns);
+
+        if (isCorrect) {
+            score++;
+            q.status = "correct";
+        } else {
+            q.status = "incorrect";
+        }
+
+        currentIndex++;
+        loadQuestion();
+    }
+
+    function skipQuestion() {
+        const q = quizQuestions[currentIndex];
+        q.status = "skipped";
+        q.savedAns = "Passé ⏭️";
+        currentIndex++;
+        loadQuestion();
+    }
+
+    function endTest() {
+        showPanel("panel-results");
+        document.getElementById("res-name").innerText = studentName;
+        document.getElementById("res-grade").innerText = `${score} / 5`;
+        
+        if (score >= 4) document.getElementById("res-grade").style.color = "var(--accent-color)";
+        else if (score >= 2.5) document.getElementById("res-grade").style.color = "#ff9500";
+        else document.getElementById("res-grade").style.color = "#ff453a";
+
+        const tableBody = document.getElementById("bilan-table-body");
+        tableBody.innerHTML = ""; 
+
+        quizQuestions.forEach(q => {
+            const row = document.createElement("tr");
+            
+            let rowClass = "row-incorrect";
+            let correctionBadge = `<span class="badge" style="color: #ff453a;">Attendu : ${q.correctDisplay}</span>`;
+
+            if (q.status === "correct") {
+                rowClass = "row-correct";
+                correctionBadge = `<span class="badge" style="color: var(--accent-color);">Correct ✅</span>`;
+            } else if (q.status === "skipped") {
+                rowClass = "row-skipped";
+                correctionBadge = `<span class="badge" style="color: var(--text-muted);">Attendu : ${q.correctDisplay}</span>`;
+            }
+
+            row.className = rowClass;
+            row.innerHTML = `
+                <td><strong>${q.type}</strong></td>
+                <td style="font-family: monospace; font-size: 1.1em; letter-spacing: 1px;">${q.flatExpr}</td>
+                <td>${q.savedAns}</td>
+                <td>${correctionBadge}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    document.getElementById("user-answer").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") submitAnswer();
+    });
+</script>
+</body>
+</html>
